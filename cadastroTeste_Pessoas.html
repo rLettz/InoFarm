@@ -1,0 +1,228 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulário de Cadastro</title>
+    <link rel="stylesheet" href="/HeaderComum/style.css" />
+    <link rel="stylesheet" href="cadastroTeste_Pessoas.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div id="header-container" style="width: 100%"></div>
+    <script>
+      fetch("./HeaderComum")
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("header-container").innerHTML = data;
+        });
+    </script>
+
+    <div class="agrupamento">
+      <div class="tabs">
+        <a class="active"> 1. Dados Pessoais </a>
+        <a> 2. Dados de Acesso </a>
+      </div>
+      <form>
+        <div class="form-group">
+          <label for="nome">Nome</label>
+          <input type="text" id="nome" placeholder="Ex: João" required />
+        </div>
+        <div class="form-group">
+          <label for="sobrenome">Sobrenome</label>
+          <input
+            type="text"
+            id="sobrenome"
+            placeholder="Ex: da Silva"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="data-nascimento">Data de Nascimento</label>
+          <input
+            type="date"
+            id="data-nascimento"
+            required
+            onkeydown="return false;"
+          />
+        </div>
+        <div class="form-group">
+          <label for="cpf">CPF</label>
+          <input
+            type="text"
+            id="cpf"
+            placeholder="Ex: 123.456.789-00"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="celular">Celular</label>
+          <input
+            type="tel"
+            id="celular"
+            placeholder="Ex: (11) 91234-5678"
+            required
+            pattern="\(\d{2}\) \9\d{4}-\d{4}"
+          />
+        </div>
+        <button
+          type="button"
+          class="btn"
+          id="sign-up"
+          disabled
+          onclick="window.location.href='cadastroTeste_Acesso.html';"
+        >
+          Continuar Cadastro
+        </button>
+      </form>
+      <p id="mensagem" role="alert"></p>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const userData = JSON.parse(localStorage.getItem("userData")) || {};
+        const formFields = [
+          "nome",
+          "sobrenome",
+          "data-nascimento",
+          "cpf",
+          "celular",
+        ];
+        const signUpButton = document.getElementById("sign-up");
+
+        // Preencher os campos com dados do localStorage (se existirem)
+        formFields.forEach((field) => {
+          const input = document.getElementById(field);
+          if (userData[field]) {
+            input.value = userData[field];
+          }
+          input.addEventListener("input", validateForm);
+        });
+
+        // Validação do formulário
+        function validateForm() {
+          const allFieldsFilled = formFields.every((field) => {
+            const value = document.getElementById(field).value;
+            return value && value.trim() !== "";
+          });
+
+          // Verifica se o CPF possui 14 caracteres (incluindo a máscara)
+          const cpfField = document.getElementById("cpf");
+          const isCpfValid = cpfField.value.length === 11;
+
+          // Habilitar o botão se todos os campos estiverem preenchidos e o CPF estiver completo
+          signUpButton.disabled = !(allFieldsFilled && isCpfValid);
+        }
+
+        // Salvar dados no localStorage ao clicar em "Continuar Cadastro"
+        signUpButton.addEventListener("click", () => {
+          formFields.forEach((field) => {
+            userData[field] = document.getElementById(field).value;
+          });
+
+          // Salvar no localStorage
+          localStorage.setItem("userData", JSON.stringify(userData));
+
+          // Redirecionar para a próxima página
+          window.location.href = "cadastroTeste_Acesso.html";
+        });
+
+        validateForm();
+
+        // Máscaras para os campos
+        document.getElementById("nome").addEventListener("input", function () {
+          this.value = this.value.replace(
+            /[^a-zA-ZáéíóúÁÉÍÓÚâêîôûÂÊÎÔÛãõÃÕçÇ\s]/g,
+            ""
+          );
+        });
+
+        document
+          .getElementById("sobrenome")
+          .addEventListener("input", function () {
+            this.value = this.value.replace(
+              /[^a-zA-ZáéíóúÁÉÍÓÚâêîôûÂÊÎÔÛãõÃÕçÇ\s]/g,
+              ""
+            );
+          });
+
+        document.getElementById("cpf").addEventListener("input", function () {
+          this.value = this.value.replace(/\D/g, ""); // Remove tudo que não for número
+          this.value = this.value.slice(0, 11); // Limita a 11 caracteres
+
+          // Aplica a máscara de CPF
+          if (this.value.length === 11) {
+            this.value = this.value.replace(
+              /(\d{3})(\d{3})(\d{3})(\d{2})/,
+              "$1.$2.$3-$4"
+            );
+          }
+
+          // Valida o CPF
+          if (this.value.length === 14 && !validarCPF(this.value)) {
+            alert("CPF inválido");
+            this.value = ""; // Limpa o campo se CPF for inválido
+          }
+        });
+
+        document
+          .getElementById("celular")
+          .addEventListener("input", function () {
+            this.value = this.value.replace(/\D/g, ""); // Remove tudo que não for número
+            this.value = this.value.slice(0, 11); // Limita a 11 caracteres
+
+            // Aplica a máscara de celular
+            if (this.value.length <= 11) {
+              this.value = this.value.replace(
+                /(\d{2})(\d{5})(\d{4})/,
+                "($1) $2-$3"
+              );
+            } else if (this.value.length === 10) {
+              this.value = this.value.replace(
+                /(\d{2})(\d{4})(\d{4})/,
+                "($1) $2-$3"
+              );
+            }
+          });
+
+        // Função para validar CPF
+        function validarCPF(cpf) {
+          cpf = cpf.replace(/[^\d]+/g, "");
+          if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+
+          let soma = 0,
+            resto;
+          for (let i = 1; i <= 9; i++)
+            soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+          resto = (soma * 10) % 11;
+          if (resto === 10 || resto === 11) resto = 0;
+          if (resto !== parseInt(cpf.substring(9, 10))) return false;
+
+          soma = 0;
+          for (let i = 1; i <= 10; i++)
+            soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+          resto = (soma * 10) % 11;
+          if (resto === 10 || resto === 11) resto = 0;
+          if (resto !== parseInt(cpf.substring(10, 11))) return false;
+
+          return true;
+        }
+      });
+    </script>
+
+    <footer>
+      <p>&copy; 2024 INO FARM. Todos os direitos reservados.</p>
+      <div class="icones">
+        <img src="img/faceboo.png" alt="Facebook" />
+        <img src="img/twiter.png" alt="Twitter" />
+        <a href="//www.instagram.com/p/CVBHlszFNTr/"
+          ><img src="img/insta2.jfif" alt="Instagram"
+        /></a>
+      </div>
+    </footer>
+  </body>
+</html>

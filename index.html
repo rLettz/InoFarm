@@ -1,0 +1,760 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Venda de Frutas</title>
+    <link rel="stylesheet" href="ListaFrutas.css" />
+    <style>
+      #cart-modal {
+        position: fixed;
+        top: calc(var(--header-height, 140px));
+        right: 0;
+        transform: none;
+        height: 80%;
+        width: 40%;
+        background: white;
+        border-left: 2px solid #ccc;
+        box-shadow: -4px 0px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        z-index: 1000;
+        display: none; /* Inicialmente oculto */
+        overflow-y: auto;
+      }
+
+      #message-container {
+        position: relative;
+        margin: 10px auto;
+        max-width: 90%;
+        text-align: center;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      #cart-message {
+        margin-top: 10px;
+        font-size: 16px;
+        color: green;
+      }
+
+      #close-modal {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      #cart-modal h2 {
+        margin-top: 0;
+        font-size: 24px;
+      }
+
+      body.modal-open {
+        overflow: hidden;
+      }
+
+      #cart-modal.hidden {
+        display: none;
+      }
+
+      #cart-modal .modal-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      #cart-items {
+        max-height: 80%;
+        overflow-y: auto;
+        padding-bottom: 80px;
+      }
+
+      #cart-modal button {
+        margin: 5px 0;
+      }
+
+      .mensagem-carrinho {
+        display: flex;
+        justify-content: center;
+      }
+
+      .alert-message {
+        position: fixed;
+        top: 9rem;
+        left: 44%;
+        z-index: 1000;
+        background: linear-gradient(135deg, #4caf50, #8bc34a);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        animation: fadeInOut 3s forwards;
+      }
+
+      .cart-empty-message {
+        top: 50%; /* Ajusta a posição para ficar sobre o carrinho */
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .modal-footer {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+      }
+
+      .next-page-button {
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        width: 100%;
+      }
+
+      .next-page-button:hover {
+        background-color: #45a049;
+      }
+
+      @keyframes fadeInOut {
+        0% {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        10%,
+        90% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+      }
+
+      @media (max-width: 768px) {
+        #cart-modal {
+          width: 100%; /* Garante que o modal ocupe 100% da largura */
+          height: 100%; /* Garante que o modal ocupe 100% da altura */
+          top: 0; /* Alinha o modal ao topo da tela */
+          right: 0; /* Alinha o modal à direita da tela */
+          border-left: none; /* Remove a borda esquerda */
+          box-shadow: none; /* Remove a sombra */
+          padding: 20px;
+          z-index: 1000;
+          display: none; /* Inicialmente oculto */
+          overflow-y: auto;
+        }
+        .alert-message {
+          top: 5%;
+          bottom: 1rem;
+          left: 0%;
+          transform: translateX(-50%);
+          max-width: 40%; 
+          max-height: 4.2em;
+          text-align: center; 
+        }
+        .cart-empty-message {
+          top: 50%; /* Ajusta a posição para ficar sobre o carrinho */
+          left: 50%;
+          transform: translate(-50%, -50%);
+          max-height: 13%; 
+          text-align: center; 
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <div class="container">
+        <img src="/img/Ino-Farm.png" alt="Logo da INO FARM" class="logo" />
+        <nav>
+          <ul>
+            <li>
+              <a class="pagFrutas" href="index.html">Frutas</a>
+            </li>
+            <li>
+              <a class="quem-somos" href="quem-somos.html">Quem Somos</a>
+            </li>
+            <li>
+              <a href="#perfil">
+                <img src="/img/perfil.png" alt="perfil" class="perfil" />
+              </a>
+              <p class="cadastro">
+                <a class="logCad" href="/login1.html"> Entre </a> ou
+                <a class="logCad" href="/cadastroTeste_Pessoas.html">
+                  Cadastre-se
+                </a>
+                <span> para ver seus pedidos</span>
+              </p>
+            </li>
+            <li>
+              <img
+                src="/img/carrinho.png"
+                alt="carrinho"
+                class="carrinho"
+                id="cart-button"
+              />
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div id="message-container"></div>
+
+    <div id="cart-modal" class="hidden">
+      <button id="close-modal" style="float: right">&times;</button>
+      <h2 class="mensagem-carrinho">Seu Carrinho</h2>
+      <div id="itensCarrinho"></div>
+      <div class="modal-footer">
+        <p class="preco-carrinho">
+          Total: R$ <span id="totalCarrinho">0,00</span>
+        </p>
+        <button
+          id="next-page-button"
+          class="next-page-button"
+          onclick="irParaPagamento()"
+        >
+          Finalizar Compra
+        </button>
+      </div>
+    </div>
+
+    <main>
+      <div class="card-container">
+        <div class="card">
+          <img src="img/maça.png" alt="Maçã" />
+          <h2>Maçã Kg</h2>
+          <p id="valor" class="total-price" data-unit-price="3.00">R$ 3,00</p>
+          <div class="quantity-control">
+            <button class="decrement">-</button>
+            <button class="increment">+</button>
+            <input
+              type="number"
+              min="1"
+              max="100"
+              value="1"
+              class="quantity-input"
+            />
+          </div>
+          <button class="buy-button">Comprar</button>
+        </div>
+
+        <div class="card">
+          <img src="img/banana.png" alt="Banana" />
+          <h2>Banana Duzia</h2>
+          <p id="valor" class="total-price" data-unit-price="7.00">R$ 7,00</p>
+          <div class="quantity-control">
+            <button class="decrement">-</button>
+            <button class="increment">+</button>
+            <input
+              type="number"
+              min="1"
+              max="100"
+              value="1"
+              class="quantity-input"
+            />
+          </div>
+          <button class="buy-button">Comprar</button>
+        </div>
+
+        <div class="card">
+          <img src="img/laranja.png" alt="Laranja" />
+          <h2>Laranja Kg</h2>
+          <p id="valor" class="total-price" data-unit-price="3.00">R$ 3,00</p>
+          <div class="quantity-control">
+            <button class="decrement">-</button>
+            <button class="increment">+</button>
+            <input
+              type="number"
+              min="1"
+              max="100"
+              value="1"
+              class="quantity-input"
+            />
+          </div>
+          <button class="buy-button">Comprar</button>
+        </div>
+
+        <div class="card">
+          <img src="img/uva.png" alt="Uva" />
+          <h2>Uva Cacho</h2>
+          <p id="valor" class="total-price" data-unit-price="5.00">R$ 5,00</p>
+          <div class="quantity-control">
+            <button class="decrement">-</button>
+            <button class="increment">+</button>
+            <input
+              type="number"
+              min="1"
+              max="100"
+              value="1"
+              class="quantity-input"
+            />
+          </div>
+          <button class="buy-button">Comprar</button>
+        </div>
+
+        <div class="card">
+          <img src="img/pera.png" alt="Pera" />
+          <h2>Pera Kg</h2>
+          <p id="valor" class="total-price" data-unit-price="4.00">R$ 4,00</p>
+          <div class="quantity-control">
+            <button class="decrement">-</button>
+            <button class="increment">+</button>
+            <input
+              type="number"
+              min="1"
+              max="100"
+              value="1"
+              class="quantity-input"
+            />
+          </div>
+          <button class="buy-button">Comprar</button>
+        </div>
+
+        <div class="card">
+          <img src="img/manga.png" alt="Manga" />
+          <h2>Manga Kg</h2>
+          <p id="valor" class="total-price" data-unit-price="5.00">R$ 5,00</p>
+          <div class="quantity-control">
+            <button class="decrement">-</button>
+            <button class="increment">+</button>
+            <input
+              type="number"
+              min="1"
+              max="100"
+              value="1"
+              class="quantity-input"
+            />
+          </div>
+          <button class="buy-button">Comprar</button>
+        </div>
+
+        <div class="card">
+          <img src="img/kiwi.png" alt="Kiwi" />
+          <h2>Kiwi Kg</h2>
+          <p id="valor" class="total-price" data-unit-price="6.00">R$ 6,00</p>
+          <div class="quantity-control">
+            <button class="decrement">-</button>
+            <button class="increment">+</button>
+            <input
+              type="number"
+              min="1"
+              max="100"
+              value="1"
+              class="quantity-input"
+            />
+          </div>
+          <button class="buy-button">Comprar</button>
+        </div>
+
+        <div class="card">
+          <img src="img/abacaxi.png" alt="Abacaxi" />
+          <h2>Abacaxi un.</h2>
+          <p id="valor" class="total-price" data-unit-price="3.00">R$ 3,00</p>
+          <div class="quantity-control">
+            <button class="decrement">-</button>
+            <button class="increment">+</button>
+            <input
+              type="number"
+              min="1"
+              max="100"
+              value="1"
+              class="quantity-input"
+            />
+          </div>
+          <button class="buy-button">Comprar</button>
+        </div>
+
+        <div class="card">
+          <img src="img/acerola.png" alt="Acerola" />
+          <h2>Acerola Kg</h2>
+          <p id="valor" class="total-price" data-unit-price="3.00">R$ 3,00</p>
+          <div class="quantity-control">
+            <button class="decrement">-</button>
+            <button class="increment">+</button>
+            <input
+              type="number"
+              min="1"
+              max="100"
+              value="1"
+              class="quantity-input"
+            />
+          </div>
+          <button class="buy-button">Comprar</button>
+        </div>
+
+        <div class="card">
+          <img src="img/goiaba.png" alt="Goiaba" />
+          <h2>Goiaba Kg</h2>
+          <p id="valor" class="total-price" data-unit-price="3.00">R$ 3,00</p>
+          <div class="quantity-control">
+            <button class="decrement">-</button>
+            <button class="increment">+</button>
+            <input
+              type="number"
+              min="1"
+              max="100"
+              value="1"
+              class="quantity-input"
+            />
+          </div>
+          <button class="buy-button">Comprar</button>
+        </div>
+
+        <div class="card">
+          <img src="img/coco.png" alt="Coco" />
+          <h2>Coco Kg</h2>
+          <p id="valor" class="total-price" data-unit-price="3.00">R$ 3,00</p>
+          <div class="quantity-control">
+            <button class="decrement">-</button>
+            <button class="increment">+</button>
+            <input
+              type="number"
+              min="1"
+              max="100"
+              value="1"
+              class="quantity-input"
+            />
+          </div>
+          <button class="buy-button">Comprar</button>
+        </div>
+
+        <div class="card">
+          <img src="img/cereja.png" alt="Cereja" />
+          <h2>Cereja Kg</h2>
+          <p id="valor" class="total-price" data-unit-price="3.00">R$ 3,00</p>
+          <div class="quantity-control">
+            <button class="decrement">-</button>
+            <button class="increment">+</button>
+            <input
+              type="number"
+              min="1"
+              max="100"
+              value="1"
+              class="quantity-input"
+            />
+          </div>
+          <button class="buy-button">Comprar</button>
+        </div>
+
+        <div class="card">
+          <img src="img/carambola.png" alt="Carambola" />
+          <h2>Carambola Kg</h2>
+          <p id="valor" class="total-price" data-unit-price="3.00">R$ 3,00</p>
+          <div class="quantity-control">
+            <button class="decrement">-</button>
+            <button class="increment">+</button>
+            <input
+              type="number"
+              min="1"
+              max="100"
+              value="1"
+              class="quantity-input"
+            />
+          </div>
+          <button class="buy-button">Comprar</button>
+        </div>
+
+        <div class="card">
+          <img src="img/cacau.png" alt="Cacau" />
+          <h2>Cacau Kg</h2>
+          <p id="valor" class="total-price" data-unit-price="3.00">R$ 3,00</p>
+          <div class="quantity-control">
+            <button class="decrement">-</button>
+            <button class="increment">+</button>
+            <input
+              type="number"
+              min="1"
+              max="100"
+              value="1"
+              class="quantity-input"
+            />
+          </div>
+          <button class="buy-button">Comprar</button>
+        </div>
+
+        <div class="card">
+          <img src="img/framboesa.png" alt="Framboesa" />
+          <h2>Framboesa Kg</h2>
+          <p id="valor" class="total-price" data-unit-price="3.00">R$ 3,00</p>
+          <div class="quantity-control">
+            <button class="decrement">-</button>
+            <button class="increment">+</button>
+            <input
+              type="number"
+              min="1"
+              max="100"
+              value="1"
+              class="quantity-input"
+            />
+          </div>
+          <button class="buy-button">Comprar</button>
+        </div>
+
+        <div class="card">
+          <img src="img/abacate.png" alt="Abacate" />
+          <h2>Abacate Kg</h2>
+          <p id="valor" class="total-price" data-unit-price="3.00">R$ 3,00</p>
+          <div class="quantity-control">
+            <button class="decrement">-</button>
+            <button class="increment">+</button>
+            <input
+              type="number"
+              min="1"
+              max="100"
+              value="1"
+              class="quantity-input"
+            />
+          </div>
+          <button class="buy-button">Comprar</button>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+        let total = 0;
+
+        function adicionarAoCarrinho(nomeProduto, preco, imagem, quantidade) {
+          const itemExistente = carrinho.find(
+            (item) => item.nome === nomeProduto
+          );
+          if (itemExistente) {
+            itemExistente.quantidade += quantidade;
+            if (itemExistente.quantidade > 100) {
+              itemExistente.quantidade = 100;
+              showMessage(
+                `Você não pode adicionar mais de 100 unidades de ${nomeProduto}.`
+              );
+            }
+            itemExistente.preco = preco * itemExistente.quantidade;
+          } else {
+            if (quantidade > 100) {
+              quantidade = 100;
+              showMessage(
+                `Você não pode adicionar mais de 100 unidades de ${nomeProduto}.`
+              );
+            }
+            carrinho.push({
+              nome: nomeProduto,
+              preco: preco * quantidade,
+              imagem: imagem,
+              quantidade: quantidade,
+            });
+          }
+          atualizarCarrinho();
+        }
+
+        function atualizarCarrinho() {
+          const itensCarrinho = document.getElementById("itensCarrinho");
+          const totalCarrinho = document.getElementById("totalCarrinho");
+
+          itensCarrinho.innerHTML = "";
+          carrinho.forEach((item) => {
+            const itemElemento = document.createElement("div");
+            itemElemento.className = "cart-item";
+            itemElemento.innerHTML = `
+          <img src="${item.imagem}" alt="${
+              item.nome
+            }" class="cart-item-image" />
+          <h3>${item.nome}</h3>
+          <p class="total-price">R$ ${item.preco
+            .toFixed(2)
+            .replace(".", ",")}</p>
+          <div class="quantity-display">Qtd: ${item.quantidade}</div>
+          <button class="remove-button">Excluir</button>
+        `;
+            itemElemento
+              .querySelector(".remove-button")
+              .addEventListener("click", function () {
+                removerDoCarrinho(item.nome);
+              });
+            itensCarrinho.appendChild(itemElemento);
+          });
+
+          total = carrinho.reduce((soma, item) => soma + item.preco, 0);
+          totalCarrinho.textContent = total.toFixed(2).replace(".", ",");
+
+          // Salva o carrinho no localStorage
+          localStorage.setItem("carrinho", JSON.stringify(carrinho));
+        }
+
+        function removerDoCarrinho(nomeProduto) {
+          carrinho = carrinho.filter((item) => item.nome !== nomeProduto);
+          atualizarCarrinho();
+        }
+
+        function irParaPagamento() {
+          if (carrinho.length === 0) {
+            showMessage(
+              "Seu carrinho está vazio! Adicione itens antes de prosseguir.",
+              true
+            );
+            return;
+          }
+
+          // Armazenar o total no localStorage para ser acessado na página de pagamento
+          localStorage.setItem(
+            "totalCompra",
+            total.toFixed(2).replace(".", ",")
+          );
+
+          // Redirecionar para a tela de pagamento
+          window.location.href = "CarrinhoFinaliza.html";
+        }
+
+        // Função para exibir a mensagem
+        function showMessage(message, isCartEmpty = false) {
+          const alertBox = document.createElement("div");
+          alertBox.className = "alert-message";
+          alertBox.innerText = message;
+          if (isCartEmpty) {
+            alertBox.classList.add("cart-empty-message");
+          }
+          document.body.appendChild(alertBox);
+          setTimeout(() => alertBox.remove(), 3000);
+        }
+
+        // Exibe a mensagem com o nome da fruta ao clicar no botão "Comprar"
+        document.querySelectorAll(".buy-button").forEach((button) => {
+          button.addEventListener("click", function () {
+            // Obtém o nome da fruta do elemento <h2> no mesmo card
+            const fruitName = this.parentElement
+              .querySelector("h2")
+              .textContent.split(" ")[0];
+            const quantityInput =
+              this.parentElement.querySelector(".quantity-input");
+            let quantity = parseInt(quantityInput.value) || 0;
+            const unitPrice = parseFloat(
+              this.parentElement.querySelector(".total-price").dataset.unitPrice
+            );
+            const imageSrc = this.parentElement.querySelector("img").src;
+
+            if (quantity < 1) {
+              showMessage("Você deve adicionar pelo menos um produto.");
+              return;
+            }
+
+            if (quantity > 100) {
+              quantity = 100;
+              quantityInput.value = 100;
+              showMessage(
+                `Você não pode adicionar mais de 100 unidades de ${fruitName}.`
+              );
+            }
+
+            showMessage(`${fruitName} foi adicionado ao carrinho!`);
+
+            adicionarAoCarrinho(fruitName, unitPrice, imageSrc, quantity);
+          });
+        });
+
+        // Configuração do modal do carrinho
+        const cartButton = document.getElementById("cart-button");
+        const cartModal = document.getElementById("cart-modal");
+        const closeModal = document.getElementById("close-modal");
+
+        // Função para abrir e fechar o modal
+        cartButton.addEventListener("click", function () {
+          if (cartModal.style.display === "block") {
+            cartModal.style.display = "none"; // Oculta o modal
+            document.body.classList.remove("modal-open");
+          } else {
+            cartModal.style.display = "block"; // Exibe o modal
+            document.body.classList.add("modal-open"); // Evita rolagem no fundo
+          }
+        });
+
+        // Função para fechar o modal
+        closeModal.addEventListener("click", function () {
+          cartModal.style.display = "none"; // Oculta o modal
+          document.body.classList.remove("modal-open");
+        });
+
+        // Fecha o modal ao clicar fora dele
+        window.addEventListener("click", function (event) {
+          if (event.target === cartModal) {
+            cartModal.style.display = "none";
+            document.body.classList.remove("modal-open");
+          }
+        });
+
+        // Atualiza o preço total nos cards
+        document.querySelectorAll(".card").forEach((card) => {
+          const decrementButton = card.querySelector(".decrement");
+          const incrementButton = card.querySelector(".increment");
+          const quantityInput = card.querySelector(".quantity-input");
+          const priceElement = card.querySelector("p");
+          const totalPriceElement = card.querySelector(".total-price");
+
+          const unitPrice = parseFloat(priceElement.dataset.unitPrice);
+
+          const updateTotalPrice = () => {
+            let quantity = parseInt(quantityInput.value) || 0;
+            if (quantity > 100) {
+              quantity = 100;
+              quantityInput.value = 100;
+              showMessage(`Você não pode adicionar mais de 100 unidades.`);
+            }
+            const total = (unitPrice * quantity).toFixed(2).replace(".", ",");
+            totalPriceElement.textContent = `R$ ${total}`;
+          };
+
+          decrementButton.addEventListener("click", () => {
+            let quantity = parseInt(quantityInput.value) || 0;
+            if (quantity > 1) {
+              quantityInput.value = --quantity;
+              updateTotalPrice();
+            }
+          });
+
+          incrementButton.addEventListener("click", () => {
+            let quantity = parseInt(quantityInput.value) || 0;
+            if (quantity < 100) {
+              quantityInput.value = ++quantity;
+              updateTotalPrice();
+            }
+          });
+
+          quantityInput.addEventListener("input", () => {
+            let quantity = parseInt(quantityInput.value) || 0;
+            if (quantity < 1) {
+              quantity = 0;
+            } else if (quantity > 100) {
+              quantity = 100;
+              quantityInput.value = 100;
+              showMessage(`Você não pode adicionar mais de 100 unidades.`);
+            }
+            updateTotalPrice();
+          });
+        });
+
+        // Atualiza o carrinho ao carregar a página
+        atualizarCarrinho();
+
+        // Adiciona evento ao botão de finalizar compra
+        document
+          .getElementById("next-page-button")
+          .addEventListener("click", irParaPagamento);
+      });
+    </script>
+
+    <footer>
+      <p>&copy; 2024 INO FARM. Todos os direitos reservados.</p>
+      <div class="icones">
+        <img src="img/faceboo.png" alt="Facebook" />
+        <img src="img/twiter.png" alt="Twitter" />
+        <img src="img/insta2.jfif" alt="Instagram" />
+      </div>
+    </footer>
+  </body>
+</html>

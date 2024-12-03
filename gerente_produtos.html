@@ -1,0 +1,425 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Catálogo de Produtos</title>
+    <link rel="stylesheet" href="/HeaderGerente/style.css" />
+    <link rel="stylesheet" href="gerente_produtos.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <style>
+      .informacoes p {
+        display: flex;
+        align-items: center;
+      }
+
+      .informacoes .quantidade,
+      .informacoes .preco {
+        margin-left: 5px;
+      }
+
+      .informacoes .input-quantidade,
+      .informacoes .input-preco {
+        display: none;
+        margin-left: 5px;
+      }
+
+      .informacoes.editando .quantidade,
+      .informacoes.editando .preco {
+        display: none;
+      }
+
+      .informacoes.editando .input-quantidade,
+      .informacoes.editando .input-preco {
+        display: inline-block;
+        margin-left: 0; /* Coloca os valores mais à esquerda possível */
+      }
+
+      .informacoes .editar {
+        display: inline-block;
+      }
+
+      .informacoes .salvar {
+        display: none;
+      }
+
+      .informacoes.editando .editar {
+        display: none;
+      }
+
+      .informacoes.editando .salvar {
+        display: inline-block;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="header-container" style="width: 100%"></div>
+    <script>
+      fetch("./HeaderGerente")
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("header-container").innerHTML = data;
+        });
+    </script>
+
+    <div class="buttons-container">
+      <div class="container_lista">
+        <div class="menu">
+          <a href="vendas.html" class="menu-item">
+            <i class="fas fa-shopping-basket"></i>
+            <p>Vendas</p>
+          </a>
+          <a href="./gerente_produtos.html" class="menu-item">
+            <i class="fas fa-box"></i>
+            <p>Produtos</p>
+          </a>
+          <a href="./entrada_saida.html" class="menu-item">
+            <i class="fas fa-building"></i>
+            <p>Registros de entrada e saída</p>
+          </a>
+        </div>
+
+        <h1>Catálogo de Produtos</h1>
+        <div class="container">
+          <div class="produto">
+            <img src="./img/uva.png" alt="Uva" class="imagem-produto" />
+            <div class="informacoes">
+              <h2>Uva</h2>
+              <p>
+                Quantidade: <span class="quantidade">0</span
+                ><input type="number" class="input-quantidade" value="0" />
+              </p>
+              <p>
+                Preço: R$ <span class="preco">100</span
+                ><input type="number" class="input-preco" value="100" />
+              </p>
+              <div class="botoes">
+                <button class="botao editar">
+                  <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="botao salvar">
+                  <i class="fas fa-save"></i> Salvar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="produto">
+            <img src="./img/maça.png" alt="Maçã" class="imagem-produto" />
+            <div class="informacoes">
+              <h2>Maçã</h2>
+              <p>
+                Quantidade: <span class="quantidade">0</span
+                ><input type="number" class="input-quantidade" value="0" />
+              </p>
+              <p>
+                Preço: R$ <span class="preco">150</span
+                ><input type="number" class="input-preco" value="150" />
+              </p>
+              <div class="botoes">
+                <button class="botao editar">
+                  <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="botao salvar">
+                  <i class="fas fa-save"></i> Salvar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="produto">
+            <img src="./img/banana.png" alt="Banana" class="imagem-produto" />
+            <div class="informacoes">
+              <h2>Banana</h2>
+              <p>
+                Quantidade: <span class="quantidade">0</span
+                ><input type="number" class="input-quantidade" value="0" />
+              </p>
+              <p>
+                Preço: R$ <span class="preco">150</span
+                ><input type="number" class="input-preco" value="150" />
+              </p>
+              <div class="botoes">
+                <button class="botao editar">
+                  <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="botao salvar">
+                  <i class="fas fa-save"></i> Salvar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="produto">
+            <img src="./img/laranja.png" alt="Laranja" class="imagem-produto" />
+            <div class="informacoes">
+              <h2>Laranja</h2>
+              <p>
+                Quantidade: <span class="quantidade">0</span
+                ><input type="number" class="input-quantidade" value="0" />
+              </p>
+              <p>
+                Preço: R$ <span class="preco">150</span
+                ><input type="number" class="input-preco" value="150" />
+              </p>
+              <div class="botoes">
+                <button class="botao editar">
+                  <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="botao salvar">
+                  <i class="fas fa-save"></i> Salvar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="produto">
+            <img src="./img/pera.png" alt="Pera" class="imagem-produto" />
+            <div class="informacoes">
+              <h2>Pera</h2>
+              <p>
+                Quantidade: <span class="quantidade">0</span
+                ><input type="number" class="input-quantidade" value="0" />
+              </p>
+              <p>
+                Preço: R$ <span class="preco">150</span
+                ><input type="number" class="input-preco" value="150" />
+              </p>
+              <div class="botoes">
+                <button class="botao editar">
+                  <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="botao salvar">
+                  <i class="fas fa-save"></i> Salvar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="produto">
+            <img src="./img/manga.png" alt="Manga" class="imagem-produto" />
+            <div class="informacoes">
+              <h2>Manga</h2>
+              <p>
+                Quantidade: <span class="quantidade">0</span
+                ><input type="number" class="input-quantidade" value="0" />
+              </p>
+              <p>
+                Preço: R$ <span class="preco">150</span
+                ><input type="number" class="input-preco" value="150" />
+              </p>
+              <div class="botoes">
+                <button class="botao editar">
+                  <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="botao salvar">
+                  <i class="fas fa-save"></i> Salvar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="produto">
+            <img src="./img/kiwi.png" alt="Kiwi" class="imagem-produto" />
+            <div class="informacoes">
+              <h2>Kiwi</h2>
+              <p>
+                Quantidade: <span class="quantidade">0</span
+                ><input type="number" class="input-quantidade" value="0" />
+              </p>
+              <p>
+                Preço: R$ <span class="preco">150</span
+                ><input type="number" class="input-preco" value="150" />
+              </p>
+              <div class="botoes">
+                <button class="botao editar">
+                  <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="botao salvar">
+                  <i class="fas fa-save"></i> Salvar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="produto">
+            <img src="./img/abacaxi.png" alt="Abacaxi" class="imagem-produto" />
+            <div class="informacoes">
+              <h2>Abacaxi</h2>
+              <p>
+                Quantidade: <span class="quantidade">0</span
+                ><input type="number" class="input-quantidade" value="0" />
+              </p>
+              <p>
+                Preço: R$ <span class="preco">150</span
+                ><input type="number" class="input-preco" value="150" />
+              </p>
+              <div class="botoes">
+                <button class="botao editar">
+                  <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="botao salvar">
+                  <i class="fas fa-save"></i> Salvar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="produto">
+            <img src="./img/acerola.png" alt="Acerola" class="imagem-produto" />
+            <div class="informacoes">
+              <h2>Acerola</h2>
+              <p>
+                Quantidade: <span class="quantidade">0</span
+                ><input type="number" class="input-quantidade" value="0" />
+              </p>
+              <p>
+                Preço: R$ <span class="preco">150</span
+                ><input type="number" class="input-preco" value="150" />
+              </p>
+              <div class="botoes">
+                <button class="botao editar">
+                  <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="botao salvar">
+                  <i class="fas fa-save"></i> Salvar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="produto">
+            <img src="./img/goiaba.png" alt="Goiaba" class="imagem-produto" />
+            <div class="informacoes">
+              <h2>Goiaba</h2>
+              <p>
+                Quantidade: <span class="quantidade">0</span
+                ><input type="number" class="input-quantidade" value="0" />
+              </p>
+              <p>
+                Preço: R$ <span class="preco">150</span
+                ><input type="number" class="input-preco" value="150" />
+              </p>
+              <div class="botoes">
+                <button class="botao editar">
+                  <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="botao salvar">
+                  <i class="fas fa-save"></i> Salvar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="produto">
+            <img src="./img/coco.png" alt="Coco" class="imagem-produto" />
+            <div class="informacoes">
+              <h2>Coco</h2>
+              <p>
+                Quantidade: <span class="quantidade">0</span
+                ><input type="number" class="input-quantidade" value="0" />
+              </p>
+              <p>
+                Preço: R$ <span class="preco">150</span
+                ><input type="number" class="input-preco" value="150" />
+              </p>
+              <div class="botoes">
+                <button class="botao editar">
+                  <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="botao salvar">
+                  <i class="fas fa-save"></i> Salvar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="produto">
+            <img src="./img/cereja.png" alt="Cereja" class="imagem-produto" />
+            <div class="informacoes">
+              <h2>Cereja</h2>
+              <p>
+                Quantidade: <span class="quantidade">0</span
+                ><input type="number" class="input-quantidade" value="0" />
+              </p>
+              <p>
+                Preço: R$ <span class="preco">150</span
+                ><input type="number" class="input-preco" value="150" />
+              </p>
+              <div class="botoes">
+                <button class="botao editar">
+                  <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="botao salvar">
+                  <i class="fas fa-save"></i> Salvar
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="produto">
+            <img src="./img/carambola.png" alt="Carambola" class="imagem-produto" />
+            <div class="informacoes">
+              <h2>Carambola</h2>
+              <p>
+                Quantidade: <span class="quantidade">0</span
+                ><input type="number" class="input-quantidade" value="0" />
+              </p>
+              <p>
+                Preço: R$ <span class="preco">150</span
+                ><input type="number" class="input-preco" value="150" />
+              </p>
+              <div class="botoes">
+                <button class="botao editar">
+                  <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="botao salvar">
+                  <i class="fas fa-save"></i> Salvar
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Função para habilitar edição
+        function habilitarEdicao(event) {
+          const informacoes = event.target.closest(".informacoes");
+          informacoes.classList.add("editando");
+        }
+
+        // Função para salvar alterações
+        function salvarAlteracoes(event) {
+          const informacoes = event.target.closest(".informacoes");
+          informacoes.classList.remove("editando");
+
+          // Atualiza os valores
+          const quantidadeInput =
+            informacoes.querySelector(".input-quantidade");
+          const precoInput = informacoes.querySelector(".input-preco");
+
+          informacoes.querySelector(".quantidade").textContent =
+            quantidadeInput.value;
+          informacoes.querySelector(".preco").textContent = precoInput.value;
+        }
+
+        // Adiciona eventos aos botões
+        document.querySelectorAll(".editar").forEach((button) => {
+          button.addEventListener("click", habilitarEdicao);
+        });
+
+        document.querySelectorAll(".salvar").forEach((button) => {
+          button.addEventListener("click", salvarAlteracoes);
+        });
+      });
+    </script>
+  </body>
+</html>

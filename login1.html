@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Página de Login</title>
+    <link rel="stylesheet" href="HeaderComum/style.css" />
+    <link rel="stylesheet" href="login1.css" />
+  </head>
+
+  <body>
+    <div id="header-container" style="width: 100%"></div>
+    <script>
+      fetch("HeaderComum/index.html")
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("header-container").innerHTML = data;
+        });
+    </script>
+    <div class="caixaTudo">
+      <div class="agrupamento">
+        <section class="informacoes">
+          <h2 class="informacoes__texto_geral">
+            Vamos conferir seu acesso <br />
+            <span class="informacoes__texto"
+              >Para continuar, digite seu CPF</span
+            >
+          </h2>
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="cpf">CPF:</label>
+              <input
+                type="text"
+                id="cpf"
+                placeholder="Digite seu CPF"
+                aria-label="Campo para inserir o CPF"
+                required
+              />
+            </div>
+            <button type="submit" class="btn">Enviar</button>
+          </form>
+          <p id="mensagem" role="alert"></p>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      let userData = localStorage.getItem("userData");
+      userData = JSON.parse(userData);
+
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          const cpf = document.getElementById("cpf").value.replace(/\D/g, ""); // Remove formatação
+          const mensagem = document.getElementById("mensagem");
+
+          const cpfGerente = "49515531802"; // CPF do gerente sem formatação
+
+          // Verifica se o CPF inserido é o CPF do gerente
+          if (cpf === cpfGerente) {
+            const gerenteData = { ...userData, role: "adm" };
+            localStorage.setItem("userData", JSON.stringify(gerenteData));
+            mensagem.textContent = "CPF de gerente válido!";
+            mensagem.style.color = "green";
+            setTimeout(
+              () => (window.location.href = "senhaGerente.html"),
+              1000
+            );
+            return; // Interrompe o fluxo aqui
+          }
+
+          if (!userData || !userData.cpf) {
+            mensagem.textContent = "Dados de usuário não encontrados.";
+            mensagem.style.color = "red";
+            return;
+          }
+
+          const userCpf = userData.cpf.replace(/\D/g, ""); // Remove formatação do CPF do usuário
+
+          // Verifica se o CPF inserido é igual ao CPF armazenado
+          if (userCpf === cpf) {
+            userData = { ...userData, role: "customer" };
+            localStorage.setItem("userData", JSON.stringify(userData));
+            mensagem.textContent = "CPF válido!";
+            mensagem.style.color = "green";
+            setTimeout(() => (window.location.href = "senha.html"), 1000);
+          } else {
+            mensagem.textContent = "CPF inválido!";
+            mensagem.style.color = "red";
+          }
+        });
+
+      document.getElementById("cpf").addEventListener("input", function () {
+        let cpfNumeros = this.value.replace(/\D/g, "").slice(0, 11);
+
+        this.value = cpfNumeros
+          .replace(/(\d{3})(\d)/, "$1.$2")
+          .replace(/(\d{3})(\d)/, "$1.$2")
+          .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+      });
+    </script>
+
+    <footer>
+      <p>&copy; 2024 INO FARM. Todos os direitos reservados.</p>
+      <div class="icones">
+        <img src="img/faceboo.png" alt="Facebook" />
+        <img src="img/twiter.png" alt="Twitter" />
+        <img src="img/insta2.jfif" alt="Instagram" />
+      </div>
+    </footer>
+  </body>
+</html>

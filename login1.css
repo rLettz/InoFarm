@@ -1,0 +1,145 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@700&family=Pacifico&display=swap");
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #e9f5e9; /* Fundo mais suave */
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  background: linear-gradient(
+    135deg,
+    #4caf50,
+    #8bc34a
+  ); /* Gradiente de verdes */
+  color: white;
+  width: 100%;
+  padding: 20px 0;
+  text-align: center;
+  position: sticky; /* Fica fixo no topo enquanto rolamos */
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4em 1em;
+}
+
+.agrupamento {
+  background-color: #fff;
+  padding: 2.5em 2em;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 30em; /* Largura máxima para garantir um tamanho apropriado */
+  transition: all 0.3s ease;
+  margin: 6em auto;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #4caf50, #8bc34a);
+  color: white;
+  width: 100%;
+  box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+  position: relative; /* Posicionamento relativo para não sobrepor outros elementos */
+  margin-top: auto; /* Garante que o footer fique no final da página */
+}
+
+.form-group {
+  padding-bottom: 2em;
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  margin: 10px 0;
+  color: #333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  transition: border 0.2s ease;
+}
+
+.form-group input:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+.btn {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  width: 100%;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+  background-color: #5ee429;
+}
+
+.icones {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.icones img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: transform 0.3s;
+  object-fit: cover;
+}
+
+.icones img:hover {
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  header .container {
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  h2 {
+    font-size: 1.2em;
+  }
+
+  .form-group {
+    padding-bottom: 0.5em;
+  }
+
+  .agrupamento {
+    max-width: 400px;
+    padding: 2em 1.5em;
+    margin: 12em auto;
+  }
+}

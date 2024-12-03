@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Unificada</title>
+    <link rel="stylesheet" href="/HeaderGerente/style.css">
+    <link rel="stylesheet" href="vendas.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div id="header-container" style="width: 100%"></div>
+    <script>
+        fetch("./HeaderGerente").then(res => res.text()).then(data => { document.getElementById('header-container').innerHTML = data })
+    </script>
+
+    <div class="buttons-container">
+        <div class="container">
+            <div class="menu">
+
+                <a href="vendas.html" class="menu-item">
+                    <i class="fas fa-shopping-basket"></i>
+                    <p>Vendas</p>
+                </a>
+
+                <a href="./gerente_produtos.html" class="menu-item">
+                    <i class="fas fa-box"></i>
+                    <p>Produtos</p>
+                </a>
+
+                <a href="./entrada_saida.html" class="menu-item">
+                    <i class="fas fa-building"></i>
+                    <p>Registros de entrada e saida</p>
+                </a>
+            </div>
+
+
+            <div class="cards">
+                <div class="card blue">
+                    <h3>Vendas no ano</h3>
+                    <p>R$ 357,25</p>
+                    <div class="icon"><i class="fas fa-arrow-up"></i></div>
+                </div>
+                <div class="card green">
+                    <h3>Vendas no mês</h3>
+                    <p>R$ 357,25</p>
+                    <div class="icon"><i class="fas fa-arrow-up"></i></div>
+                </div>
+                <div class="card yellow">
+                    <h3>Margem bruta no mês</h3>
+                    <p>R$ 325,55</p>
+                    <div class="icon"><i class="fas fa-arrow-up"></i></div>
+                </div>
+                <div class="card red">
+                    <h3>Despesas no mês</h3>
+                    <p>R$ -70,00</p>
+                    <div class="icon"><i class="fas fa-arrow-down"></i></div>
+                </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="filter-container">
+                <label for="fruitFilter">Escolha a fruta:</label>
+                <select id="fruitFilter">
+                    <option value="all">Todas</option>
+                    <option value="mango">Manga</option>
+                    <option value="banana">Banana</option>
+                    <option value="strawberry">Morango</option>
+                    <option value="orange">Laranja</option>
+                </select>
+
+                <label for="quarterFilter">Escolha o trimestre:</label>
+                <select id="quarterFilter">
+                    <option value="all">Todos</option>
+                    <option value="Q1">1º Trimestre</option>
+                    <option value="Q2">2º Trimestre</option>
+                    <option value="Q3">3º Trimestre</option>
+                    <option value="Q4">4º Trimestre</option>
+                </select>
+            </div>
+
+            <!-- Gráficos lado a lado -->
+            <div class="charts" style="display: flex; justify-content: space-between;">
+                <div class="chart-container" style="width: 48%; padding: 10px;">
+                    <canvas id="salesChart"></canvas>
+                </div>
+                <div class="chart-container" style="width: 48%; padding: 10px;">
+                    <canvas id="sectorChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados das vendas por fruta e setor
+        const fruitSectorData = {
+            mango: { Governo: [1000, 1500, 1200, 1800, 1600, 1900, 2100, 2200, 2300, 2400, 2600, 2700] },
+            banana: { Governo: [1200, 1600, 1400, 2000, 1800, 2100, 2300, 2400, 2500, 2600, 2800, 3000] },
+            strawberry: { Governo: [800, 1000, 900, 1300, 1200, 1400, 1600, 1700, 1800, 1900, 2100, 2200] },
+            orange: { Governo: [1500, 1800, 1600, 2300, 2100, 2500, 2700, 2900, 3000, 3200, 3400, 3600] }
+        };
+
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                datasets: [{
+                    label: 'Vendas',
+                    data: fruitSectorData.mango.Governo,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        const sectorData = {
+            labels: ['Governo', 'Varejo', 'Empresarial', 'Outros'],
+            datasets: [{
+                label: 'Vendas por Setor (R$)',
+                data: [4500, 2250, 1400, 900],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        const sectorChartCtx = document.getElementById('sectorChart').getContext('2d');
+        const sectorChart = new Chart(sectorChartCtx, {
+            type: 'bar',
+            data: sectorData,
+            options: {
+                responsive: true,
+                scales: {
+                    x: { beginAtZero: true, title: { display: true, text: 'Setores' } },
+                    y: { beginAtZero: true, title: { display: true, text: 'Vendas (R$)' } }
+                }
+            }
+        });
+
+        function updateCharts() {
+            const selectedFruit = document.getElementById('fruitFilter').value;
+            const selectedQuarter = document.getElementById('quarterFilter').value;
+
+            let filteredData, filteredLabels;
+            if (selectedFruit === 'all') {
+                filteredData = Array(12).fill(0);
+                for (const fruit in fruitSectorData) {
+                    for (let i = 0; i < 12; i++) {
+                        filteredData[i] += fruitSectorData[fruit].Governo[i];
+                    }
+                }
+            } else {
+                filteredData = fruitSectorData[selectedFruit].Governo;
+            }
+
+            if (selectedQuarter === 'Q1') {
+                filteredData = filteredData.slice(0, 3);
+                filteredLabels = ['Jan', 'Fev', 'Mar'];
+            } else if (selectedQuarter === 'Q2') {
+                filteredData = filteredData.slice(3, 6);
+                filteredLabels = ['Abr', 'Mai', 'Jun'];
+            } else if (selectedQuarter === 'Q3') {
+                filteredData = filteredData.slice(6, 9);
+                filteredLabels = ['Jul', 'Ago', 'Set'];
+            } else if (selectedQuarter === 'Q4') {
+                filteredData = filteredData.slice(9, 12);
+                filteredLabels = ['Out', 'Nov', 'Dez'];
+            } else {
+                filteredLabels = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            }
+
+            salesChart.data.labels = filteredLabels;
+            salesChart.data.datasets[0].data = filteredData;
+            salesChart.update();
+
+            let updatedSectorData;
+            if (selectedQuarter === 'Q1') {
+                updatedSectorData = [fruitSectorData[selectedFruit]?.Governo[0] || 0, fruitSectorData[selectedFruit]?.Governo[1] || 0, fruitSectorData[selectedFruit]?.Governo[2] || 0, 0];
+            } else if (selectedQuarter === 'Q2') {
+                updatedSectorData = [0, fruitSectorData[selectedFruit]?.Governo[3] || 0, fruitSectorData[selectedFruit]?.Governo[4] || 0, fruitSectorData[selectedFruit]?.Governo[5] || 0];
+            } else if (selectedQuarter === 'Q3') {
+                updatedSectorData = [0, 0, fruitSectorData[selectedFruit]?.Governo[6] || 0, fruitSectorData[selectedFruit]?.Governo[7] || 0];
+            } else if (selectedQuarter === 'Q4') {
+                updatedSectorData = [0, 0, 0, fruitSectorData[selectedFruit]?.Governo[9] || 0];
+            } else {
+                updatedSectorData = [
+                    fruitSectorData[selectedFruit]?.Governo[0] || 0,
+                    fruitSectorData[selectedFruit]?.Governo[1] || 0,
+                    fruitSectorData[selectedFruit]?.Governo[2] || 0,
+                    fruitSectorData[selectedFruit]?.Governo[3] || 0
+                ];
+            }
+
+            if (selectedFruit === 'all') {
+                updatedSectorData = [];
+                for (const fruit in fruitSectorData) {
+                    updatedSectorData.push(fruitSectorData[fruit].Governo[0] || 0);
+                    updatedSectorData.push(fruitSectorData[fruit].Governo[1] || 0);
+                    updatedSectorData.push(fruitSectorData[fruit].Governo[2] || 0);
+                    updatedSectorData.push(fruitSectorData[fruit].Governo[3] || 0);
+                }
+            }
+
+            sectorChart.data.datasets[0].data = updatedSectorData;
+            sectorChart.update();
+        }
+
+        document.getElementById('fruitFilter').addEventListener('change', updateCharts);
+        document.getElementById('quarterFilter').addEventListener('change', updateCharts);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulário de Cadastro</title>
+    <link rel="stylesheet" href="/HeaderComum/style.css" />
+    <link rel="stylesheet" href="cadastroTeste_Acesso.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <script>
+      document.addEventListener("click", function (event) {
+        if (event.target.classList.contains("toggle-password")) {
+          const input = event.target.previousElementSibling;
+          if (input.type === "password") {
+            input.type = "text";
+            event.target.classList.toggle("fa-eye");
+            event.target.classList.toggle("fa-eye-slash");
+          } else {
+            input.type = "password";
+            event.target.classList.toggle("fa-eye-slash");
+            event.target.classList.toggle("fa-eye");
+          }
+        }
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="header-container" style="width: 100%"></div>
+    <script>
+      fetch("./HeaderComum")
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("header-container").innerHTML = data;
+        });
+    </script>
+
+    <div class="agrupamento">
+      <div class="tabs">
+        <a>1. Dados Pessoais</a>
+        <a class="active">2. Dados de Acesso</a>
+      </div>
+      <form id="cadastroForm">
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="Digite seu e-mail"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="confirm-email">Confirmar e-mail</label>
+          <input
+            type="email"
+            id="confirm-email"
+            placeholder="Digite novamente seu e-mail"
+            required
+          />
+        </div>
+        <div class="form-group relative">
+          <label for="password">Senha</label>
+          <input type="password" id="password" placeholder="Crie uma senha" />
+          <i class="fas fa-eye toggle-password"></i>
+          <div class="error-message">
+            A senha deve ter no mínimo 8 caracteres, com letras e números.
+          </div>
+        </div>
+        <div class="form-group relative">
+          <label for="confirm-password">Confirmar Senha</label>
+          <input
+            type="password"
+            id="confirm-password"
+            placeholder="Digite novamente a nova senha criada"
+          />
+          <i class="fas fa-eye toggle-password"></i>
+        </div>
+        <div class="checkbox-group">
+          <input type="checkbox" id="promotions" />
+          <label for="promotions">Aceito receber promoções e novidades.</label>
+        </div>
+        <button type="button" class="btn" id="criar-conta" disabled>
+          Criar Conta
+        </button>
+        <a href="cadastroTeste_Pessoas.html" class="back-link"
+          >Voltar para Dados Pessoais</a
+        >
+      </form>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        let userData = JSON.parse(localStorage.getItem("userData")) || {};
+
+        const formFields = [
+          "email",
+          "confirm-email",
+          "password",
+          "confirm-password",
+        ];
+        const criarContaButton = document.getElementById("criar-conta");
+
+        function validateForm() {
+          // Atualiza o objeto userData com os valores do formulário
+          userData = {
+            ...userData,
+            email: document.getElementById("email").value,
+            confirmEmail: document.getElementById("confirm-email").value,
+            password: document.getElementById("password").value,
+            confirmPassword: document.getElementById("confirm-password").value,
+            promotions: document.getElementById("promotions").checked,
+          };
+
+          // Valida todos os campos do formulário
+          const allFieldsFilled = formFields.every((id) => {
+            const value = document.getElementById(id).value;
+            return value && value.trim() !== "";
+          });
+
+          // Verifica se os emails e senhas coincidem
+          const emailsMatch = userData.email === userData.confirmEmail;
+          const passwordsMatch =
+            userData.password === userData.confirmPassword &&
+            userData.password.length >= 8;
+
+          // Habilita ou desabilita o botão com base nas validações
+          criarContaButton.disabled = !(
+            allFieldsFilled &&
+            emailsMatch &&
+            passwordsMatch
+          );
+        }
+
+        // Adiciona eventos de validação nos campos do formulário
+        formFields.forEach((id) => {
+          document.getElementById(id).addEventListener("input", validateForm);
+        });
+
+        document
+          .getElementById("promotions")
+          .addEventListener("change", validateForm);
+
+        // Ao clicar no botão "Criar Conta"
+        criarContaButton.addEventListener("click", () => {
+          // Salva os dados atualizados no localStorage
+          localStorage.setItem("userData", JSON.stringify(userData));
+
+          // Redireciona para a página de login
+          if (localStorage.getItem("userData")) {
+            window.location.href = "login1.html";
+          }
+        });
+
+        // Valida o formulário ao carregar a página
+        validateForm();
+      });
+    </script>
+
+    <footer>
+      <p>&copy; 2024 INO FARM. Todos os direitos reservados.</p>
+      <div class="icones">
+        <img src="img/faceboo.png" alt="Facebook" />
+        <img src="img/twiter.png" alt="Twitter" />
+        <img src="img/insta2.jfif" alt="Instagram" />
+      </div>
+    </footer>
+  </body>
+</html>

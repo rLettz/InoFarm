@@ -1,0 +1,280 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Registro de Entrada e Saída</title>
+    <link rel="stylesheet" href="/HeaderGerente/style.css" />
+    <link rel="stylesheet" href="entrada_saida.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #f4f4f4;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      .container_dados {
+        width: 90%;
+        max-width: 1200px;
+        margin: 20px auto;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+      }
+
+      .filtros {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+      }
+
+      .botao-filtro {
+        flex: 1;
+        padding: 10px 15px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 0 5px;
+        transition: background-color 0.3s;
+      }
+
+      .botao-filtro:hover {
+        background-color: #45a049;
+      }
+
+      .produto {
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+      }
+
+      .informacoes {
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+      }
+
+      .informacoes p {
+        margin: 0 10px;
+        flex: 1;
+        text-align: center;
+      }
+
+      .cabeçalho {
+        background-color: #4caf50;
+        color: white;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="header-container" style="width: 100%"></div>
+    <script>
+      fetch("./HeaderGerente")
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("header-container").innerHTML = data;
+        });
+    </script>
+
+    <div class="buttons-container">
+      <div class="container_lista">
+        <div class="menu">
+          <a href="vendas.html" class="menu-item">
+            <i class="fas fa-shopping-basket"></i>
+            <p>Vendas</p>
+          </a>
+
+          <a href="./gerente_produtos.html" class="menu-item">
+            <i class="fas fa-box"></i>
+            <p>Produtos</p>
+          </a>
+
+          <a href="./entrada_saida.html" class="menu-item">
+            <i class="fas fa-building"></i>
+            <p>Registros de entrada e saida</p>
+          </a>
+        </div>
+
+        <h1>Registro de Entrada e Saída</h1>
+        <div class="container_dados">
+          <div class="filtros">
+            <button class="botao-filtro" onclick="filtrar('fornecimento')">
+              Filtro Fornecimento
+            </button>
+            <button class="botao-filtro" onclick="filtrar('venda')">
+              Filtro Venda
+            </button>
+            <button class="botao-filtro" onclick="filtrar('devolução')">
+              Filtro Devoluções
+            </button>
+            <button class="botao-filtro" onclick="mostrarTodos()">
+              Mostrar Todos
+            </button>
+          </div>
+
+          <div class="elementos-produtos">
+            <div class="produto cabeçalho">
+              <div class="informacoes">
+                <p>ID</p>
+                <p>Quem fez</p>
+                <p>Ação</p>
+                <p>Data</p>
+                <p>Detalhes</p>
+                <p>Forma de pagamento</p>
+                <p>Valor</p>
+              </div>
+            </div>
+
+            <div class="produtos" data-acao="fornecimento">
+              <div class="informacoes">
+                <p>21112</p>
+                <p>ADM</p>
+                <p>Fornecimento</p>
+                <p>31/10/2024</p>
+                <p>+30 uva, +20 maçã, +10 banana</p>
+                <p>Crédito</p>
+                <p>R$ 257,00</p>
+              </div>
+            </div>
+            <div class="produtos" data-acao="venda">
+              <div class="informacoes">
+                <p>21113</p>
+                <p>Maria</p>
+                <p>Venda</p>
+                <p>31/10/2024</p>
+                <p>+15 laranjas</p>
+                <p>Débito</p>
+                <p>R$ 150,00</p>
+              </div>
+            </div>
+
+            <div class="produtos" data-acao="devolução">
+              <div class="informacoes">
+                <p>21114</p>
+                <p>José</p>
+                <p>Devolução</p>
+                <p>31/10/2024</p>
+                <p>-10 bananas</p>
+                <p>Crédito</p>
+                <p>R$ 100,00</p>
+              </div>
+            </div>
+
+            <div class="produtos" data-acao="venda">
+              <div class="informacoes">
+                <p>21115</p>
+                <p>Clara</p>
+                <p>Venda</p>
+                <p>31/10/2024</p>
+                <p>+25 maçãs</p>
+                <p>Crédito</p>
+                <p>R$ 300,00</p>
+              </div>
+            </div>
+
+            <div class="produtos" data-acao="fornecimento">
+              <div class="informacoes">
+                <p>21116</p>
+                <p>Lucas</p>
+                <p>Fornecimento</p>
+                <p>31/10/2024</p>
+                <p>+50 pêras</p>
+                <p>Crédito</p>
+                <p>R$ 400,00</p>
+              </div>
+            </div>
+
+            <div class="produtos" data-acao="venda">
+              <div class="informacoes">
+                <p>21117</p>
+                <p>Bianca</p>
+                <p>Venda</p>
+                <p>31/10/2024</p>
+                <p>+10 melancias</p>
+                <p>Débito</p>
+                <p>R$ 200,00</p>
+              </div>
+            </div>
+
+            <div class="produtos" data-acao="devolução">
+              <div class="informacoes">
+                <p>21118</p>
+                <p>Fernanda</p>
+                <p>Devolução</p>
+                <p>31/10/2024</p>
+                <p>-5 laranjas</p>
+                <p>Crédito</p>
+                <p>R$ 75,00</p>
+              </div>
+            </div>
+
+            <div class="produtos" data-acao="venda">
+              <div class="informacoes">
+                <p>21119</p>
+                <p>Renato</p>
+                <p>Venda</p>
+                <p>31/10/2024</p>
+                <p>+40 pêssegos</p>
+                <p>Crédito</p>
+                <p>R$ 350,00</p>
+              </div>
+            </div>
+
+            <div class="produtos" data-acao="fornecimento">
+              <div class="informacoes">
+                <p>21120</p>
+                <p>Sofia</p>
+                <p>Fornecimento</p>
+                <p>31/10/2024</p>
+                <p>+20 abacates</p>
+                <p>Débito</p>
+                <p>R$ 120,00</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <script>
+          function filtrar(acao) {
+            const produtos = document.querySelectorAll(".produtos");
+            produtos.forEach((produto) => {
+              if (produto.getAttribute("data-acao") === acao) {
+                produto.style.display = "flex";
+              } else {
+                produto.style.display = "none";
+              }
+            });
+          }
+
+          function mostrarTodos() {
+            const produtos = document.querySelectorAll(".produtos");
+            produtos.forEach((produto) => {
+              produto.style.display = "flex";
+            });
+          }
+        </script>
+      </div>
+    </div>
+  </body>
+</html>

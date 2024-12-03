@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Finalizar compra</title>
+    <link rel="stylesheet" href="/HeaderComum/style.css" />
+    <link rel="stylesheet" href="CarrinhoFinaliza.css" />
+    <style>
+      .pix-screen {
+        display: none;
+        background-color: #ffffff;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .pix-screen img {
+        width: 150px;
+        height: 150px;
+        margin-bottom: 20px;
+      }
+
+      .button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+        display: block;
+        width: 80%;
+        max-width: 300px;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .button:hover {
+        background-color: #45a049;
+      }
+
+      .pix-screen p {
+        font-size: 18px;
+        margin-top: 20px;
+      }
+
+      .alert-message {
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        background: linear-gradient(135deg, #4caf50, #8bc34a);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        animation: fadeInOut 3s forwards;
+      }
+
+      @keyframes fadeInOut {
+        0% {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        10%,
+        90% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+      }
+
+      /* Ajuste para a seção PIX */
+      .pix-info {
+        border: 1px solid #4caf50;
+        border-radius: 5px;
+        padding: 20px;
+        margin-top: 20px;
+        position: relative;
+      }
+
+      .button-finalizar {
+        margin-top: 20px;
+        margin-bottom: 20px; /* Espaçamento para separar do rodapé */
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="header-container" style="width: 100%"></div>
+    <script>
+      fetch("./HeaderComum")
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("header-container").innerHTML = data;
+        });
+    </script>
+
+    <section class="container__cards">
+      <div class="card">
+        <h2>Total</h2>
+        <div class="info">
+          <div class="header">
+            <p><strong>Item</strong></p>
+            <p><strong>Quantidade</strong></p>
+            <p><strong>Valor</strong></p>
+          </div>
+          <div id="items-container"></div>
+        </div>
+        <div class="total-info">
+          <p>
+            <strong>Total Produtos:</strong> R$
+            <span id="totalProdutos">0,00</span>
+          </p>
+          <p><strong>Frete: </strong>R$ 20,00</p>
+          <p>
+            <strong>Total Final:</strong> R$ <span id="totalFinal">0,00</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <form class="purchase-form" id="purchase-form">
+      <h3>Escolha o Método de Pagamento:</h3>
+      <label>
+        <input type="radio" name="payment" value="cartao_credito" checked />
+        Cartão de Crédito
+      </label>
+      <label>
+        <input type="radio" name="payment" value="boleto" /> Boleto
+      </label>
+      <label> <input type="radio" name="payment" value="pix" /> PIX </label>
+
+      <div id="card-info" class="card-info" style="display: block">
+        <h4>Dados do Cartão</h4>
+        <label for="card-number">Número do Cartão:</label>
+        <input
+          type="text"
+          id="card-number"
+          name="card-number"
+          placeholder="1234 5678 9012 3456"
+          required
+        />
+
+        <label for="card-name">Nome no Cartão:</label>
+        <input
+          type="text"
+          id="card-name"
+          name="card-name"
+          placeholder="Nome do Titular"
+          required
+        />
+
+        <label for="card-expiry">Validade:</label>
+        <input
+          type="text"
+          id="card-expiry"
+          name="card-expiry"
+          placeholder="MM/AA"
+          required
+        />
+
+        <label for="card-cvc">CVC:</label>
+        <input
+          type="text"
+          id="card-cvc"
+          name="card-cvc"
+          placeholder="123"
+          required
+        />
+      </div>
+
+      <div id="boleto-info" class="boleto-info" style="display: none">
+        <h4>Pagamento via Boleto</h4>
+        <img
+          class="barcode"
+          src="img/barras.png"
+          alt="Código de Barras"
+          id="barcode"
+        />
+      </div>
+
+      <div id="pix-info" class="pix-info" style="display: none">
+        <h4>Pagamento via PIX</h4>
+        <img class="qrcode" src="img/qrcode.gif" alt="QR Code" id="qr-code" />
+        <div>
+          <input
+            type="text"
+            id="pix-code"
+            value="00020126380014BR.GOV.BCB.PIX0123..."
+            readonly
+            style="width: 100%; margin-top: 10px; text-align: center;"
+          />
+        </div>
+        <button type="button" class="button" id="copy-pix-button">
+          Copiar Código PIX
+        </button>
+      </div>
+
+      <!-- Botão Finalizar Compra visível para todas as opções -->
+      <button class="button button-finalizar" id="finalize-button">
+        Finalizar Compra
+      </button>
+    </form>
+
+    <div class="pix-screen" id="pix-screen">
+      <img src="img/confirmado.gif" alt="Confirmação" />
+      <p>Código de entrega gerado:</p>
+      <div>
+        <input
+          type="text"
+          id="delivery-code"
+          value="ENTREGA123456789"
+          readonly
+          style="width: 80%; margin-top: 10px; text-align: center;"
+        />
+      </div>
+      <button type="button" class="button" id="copy-delivery-button">
+        Copiar Código de Entrega
+      </button>
+      <p>Quando o código for copiado, você será redirecionado para a tela de frutas.</p>
+    </div>
+
+    <script>
+      const paymentRadios = document.querySelectorAll('input[name="payment"]');
+      const cardInfo = document.getElementById("card-info");
+      const boletoInfo = document.getElementById("boleto-info");
+      const pixInfo = document.getElementById("pix-info");
+      const pixScreen = document.getElementById("pix-screen");
+      const copyPixButton = document.getElementById("copy-pix-button");
+      const finalizeButton = document.getElementById("finalize-button");
+      const copyDeliveryButton = document.getElementById("copy-delivery-button");
+
+      paymentRadios.forEach((radio) => {
+        radio.addEventListener("change", function () {
+          if (this.value === "cartao_credito") {
+            cardInfo.style.display = "block";
+            boletoInfo.style.display = "none";
+            pixInfo.style.display = "none";
+          } else if (this.value === "boleto") {
+            cardInfo.style.display = "none";
+            boletoInfo.style.display = "block";
+            pixInfo.style.display = "none";
+          } else if (this.value === "pix") {
+            cardInfo.style.display = "none";
+            boletoInfo.style.display = "none";
+            pixInfo.style.display = "block";
+          }
+        });
+      });
+
+      copyPixButton.addEventListener("click", function () {
+        const pixCode = document.getElementById("pix-code").value;
+        navigator.clipboard
+          .writeText(pixCode)
+          .then(() => {
+            showBalloonMessage("Código PIX copiado para a área de transferência!");
+          })
+          .catch((err) => {
+            console.error("Erro ao copiar o código PIX: ", err);
+          });
+      });
+
+      finalizeButton.addEventListener("click", function () {
+        showBalloonMessage("Compra em processamento...");
+        setTimeout(() => {
+          pixScreen.style.display = "flex";
+        }, 2000);
+      });
+
+      copyDeliveryButton.addEventListener("click", function () {
+        const deliveryCode = document.getElementById("delivery-code").value;
+        navigator.clipboard
+          .writeText(deliveryCode)
+          .then(() => {
+            showBalloonMessage("Código de entrega copiado para a área de transferência!");
+            setTimeout(() => {
+              window.location.href = "ListaFrutas.html";
+            }, 2000);
+          })
+          .catch((err) => {
+            console.error("Erro ao copiar o código de entrega: ", err);
+          });
+      });
+
+      // Função para exibir mensagem em balão
+      function showBalloonMessage(message) {
+        const alertBox = document.createElement("div");
+        alertBox.className = "alert-message";
+        alertBox.innerText = message;
+        document.body.appendChild(alertBox);
+        setTimeout(() => alertBox.remove(), 3000);
+      }
+
+      // Recuperar o carrinho armazenado no localStorage
+      let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+      let totalProdutos = 0;
+
+      // Função para atualizar a exibição dos itens do carrinho
+      function atualizarItensCarrinho() {
+        const itemsContainer = document.getElementById("items-container");
+        itemsContainer.innerHTML = "";
+
+        carrinho.forEach((item) => {
+          const itemElemento = document.createElement("div");
+          itemElemento.className = "item";
+          itemElemento.innerHTML = `
+                    <p>${item.nome}</p>
+                    <img src="${item.imagem}" alt="${
+            item.nome
+          }" class="product-image">
+                    <p>${item.quantidade}</p>
+                    <p>R$ ${item.preco.toFixed(2).replace(".", ",")}</p>
+                `;
+          itemsContainer.appendChild(itemElemento);
+          totalProdutos += item.preco;
+        });
+
+        document.getElementById("totalProdutos").textContent = totalProdutos
+          .toFixed(2)
+          .replace(".", ",");
+        document.getElementById("totalFinal").textContent = (totalProdutos + 20)
+          .toFixed(2)
+          .replace(".", ",");
+      }
+
+      // Atualiza os itens do carrinho ao carregar a página
+      atualizarItensCarrinho();
+    </script>
+
+    <footer>
+      <p>&copy; 2024 INO FARM. Todos os direitos reservados.</p>
+      <div class="icones">
+        <img src="img/faceboo.png" alt="Facebook" />
+        <img src="img/twiter.png" alt="Twitter" />
+        <img src="img/insta2.jfif" alt="Instagram" />
+      </div>
+    </footer>
+  </body>
+</html>

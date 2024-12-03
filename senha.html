@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Página de Senha</title>
+    <link rel="stylesheet" href="/HeaderComum/style.css" />
+    <link rel="stylesheet" href="senha.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div id="header-container" style="width: 100%"></div>
+    <script>
+      fetch("./HeaderComum")
+        .then((res) => res.text())
+        .then((data) => {
+          document.getElementById("header-container").innerHTML = data;
+        });
+    </script>
+
+    <div class="agrupamento">
+      <section class="informacoes">
+        <h2 class="informacoes__texto_geral">
+          Bem Vindo(a) <br /><span class="informacoes__texto"
+            >Por favor, digite sua senha</span
+          >
+        </h2>
+        <form id="senhaForm">
+          <div class="form-group relative">
+            <label for="senha">Senha:</label>
+            <input
+              type="password"
+              id="senha"
+              placeholder="Digite sua senha"
+              required
+            />
+            <i class="fas fa-eye toggle-password"></i>
+          </div>
+          <button type="submit" class="btn">Enviar</button>
+          <a href="login1.html" class="back-link">Voltar para login</a>
+        </form>
+        <p id="mensagem"></p>
+      </section>
+    </div>
+
+    <script>
+      let userData = localStorage.getItem("userData");
+      userData = JSON.parse(userData);
+
+      // Função para alternar a visibilidade da senha
+      document.querySelectorAll(".toggle-password").forEach((item) => {
+        item.addEventListener("click", function () {
+          const input = this.previousElementSibling;
+          if (input.type === "password") {
+            input.type = "text";
+            this.classList.toggle("fa-eye");
+            this.classList.toggle("fa-eye-slash");
+          } else {
+            input.type = "password";
+            this.classList.toggle("fa-eye-slash");
+            this.classList.toggle("fa-eye");
+          }
+        });
+      });
+
+      // Lógica para verificar a senha
+      document
+        .getElementById("senhaForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          const senhaInserida = document.getElementById("senha").value;
+          const mensagem = document.getElementById("mensagem");
+
+          // A senha predefinida do gerente
+
+          if (senhaInserida === userData.password) {
+            mensagem.textContent = "Senha correta!";
+            mensagem.style.color = "green";
+
+            // Redireciona para a página de vendas após 1 segundo
+            setTimeout(() => (window.location.href = "ListaFrutas.html"), 1000);
+          } else {
+            mensagem.textContent = "Senha incorreta. Tente novamente.";
+            mensagem.style.color = "red";
+
+            // Remove a mensagem de erro após 1 segundo
+            setTimeout(() => {
+              mensagem.textContent = "";
+            }, 1000);
+          }
+        });
+    </script>
+
+    <footer>
+      <p>&copy; 2024 INO FARM. Todos os direitos reservados.</p>
+      <div class="icones">
+        <img src="img/faceboo.png" alt="Facebook" />
+        <img src="img/twiter.png" alt="Twitter" />
+        <img src="img/insta2.jfif" alt="Instagram" />
+      </div>
+    </footer>
+  </body>
+</html>

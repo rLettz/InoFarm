@@ -1,0 +1,238 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@700&family=Pacifico&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.icones {
+    display: flex; /* Exibe os ícones em linha */
+    justify-content: center; /* Centraliza os ícones */
+    gap: 15px; /* Espaçamento entre os ícones */
+    margin-top: 20px; /* Espaço acima dos ícones */
+}
+
+.icones img {
+    width: 40px; /* Ajuste o tamanho dos ícones */
+    height: 40px; /* Mantém a altura igual à largura para formar um círculo */
+    border-radius: 50%; /* Faz os ícones ficarem circulares */
+    transition: transform 0.3s; /* Transição suave para a transformação */
+    object-fit: cover; /* Garante que a imagem preencha o círculo */
+}
+
+.icones img:hover {
+    transform: scale(1.1); /* Aumenta ligeiramente o ícone ao passar o mouse */
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: #e9f5e9; /* Fundo mais suave */
+    color: #333;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #4caf50, #8bc34a); /* Gradiente de verdes */
+    color: white;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+
+
+.carrinho {
+    width: 50px; /* Ajuste a largura conforme necessário */
+    height: 50px; /* Mantém a proporção da imagem */
+    border-radius: 50%;
+    transition: transform 0.3s ease; /* Transição suave ao alterar a transformação */
+    background-color: transparent; /* Assegura que o fundo é transparente */
+    object-fit: cover; /* Garante que a imagem preencha o círculo */
+    mix-blend-mode: multiply; /* Muda a mistura da imagem */
+}
+
+.perfil {
+    width: 50px; /* Ajuste a largura conforme necessário */
+    height: 50px; /* Mantém a proporção da imagem */
+    border-radius: 50%;
+    transition: transform 0.3s ease; /* Transição suave ao alterar a transformação */
+    background-color: transparent; /* Assegura que o fundo é transparente */
+    object-fit: cover; /* Garante que a imagem preencha o círculo */
+    margin-right: 0.8em;
+}
+
+.agrupamento {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    margin: 8em auto;
+    max-width: 500px;
+    transition: all 0.3s ease;
+}
+
+.tabs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.tabs a {
+    text-decoration: none;
+    color: #2b8a53; /* dados pessoais e de acesso */
+    font-weight: bold;
+    padding: 10px 0;
+    transition: color 0.2s ease;
+}
+
+.tabs a.active {
+    border-bottom: 2px solid #468a2b;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    position: relative;
+
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: border 0.2s ease;
+}
+
+.form-group input:focus {
+    border-color: #368a2b;
+    outline: none;
+}
+
+.error-message {
+    color: #b00020;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 40px;
+    cursor: pointer;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.btn {
+    background-color: #2b8a4b;
+    color: #fff;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+    background-color: #1dc517;
+}
+
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    color: #008000;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    /* Estilos para mobile */
+
+    header {
+        width: 100%;
+        position: absolute;
+    }
+
+    footer {
+        position: static;
+    }
+
+    .container_header {
+        justify-content: space-between;
+        flex-direction: row;
+        width: 100%;
+    }
+
+    header .logo, 
+    header .perfil,
+    header .quem-somos {
+        display: none;
+    }
+
+    nav ul {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding-left: 1em;
+    }
+
+    nav ul li {
+        text-align: center;
+    }
+
+    nav a {
+        font-family: 1em;
+    }
+
+    .cadastro {
+        padding-right: 1em;
+    }
+
+    .agrupamento {
+        margin: 15em auto 5em;
+        max-width: 90%;
+    }
+
+    .tabs a.active {
+        border-bottom: 2px solid #468a2b;
+        max-width: 4.5em;
+    }
+
+    .tabs a {
+        max-width: 5em;
+    }
+}
+
+
